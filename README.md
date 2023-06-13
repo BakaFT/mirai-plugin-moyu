@@ -16,25 +16,17 @@
 
 特别地，当`Contact ID`为`-`时，表示向`上次发送的对象`发送消息，不用再输入ID
 
-# 搜索功能
+## /search
 
-# `search <neddle>`
+`/search <neddle>`
 
-自动搜索名字里包含`neddle`的群或者好友，大小写敏感
+搜索名字中包含`neddle`的好友或者群
 
-# 过滤功能
+目前的实现需要完善，只能返回一个
 
-## `filter only <OBJ> <OBJ>`
 
-`只显示`来自`OBJs`的消息
 
-## `filter exclude <OBJ> <OBJ>`
 
-排除OBJs的消息
-
-## `filter clear`
-
-清空过滤器
 
 
 
