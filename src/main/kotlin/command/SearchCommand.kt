@@ -23,8 +23,10 @@ object ObjCommand: RawCommand(
 
         val friends = botInstance.friends
         val groups = botInstance.groups
+
         val searchResGroup = groups.find { it.name.contains(neddle) }
         val searchResFriend = friends.find { it.nick.contains(neddle) }
+
         if (searchResGroup != null){
             println("[Name]:"+searchResGroup.name+",[ID]:"+searchResGroup.id)
         }
