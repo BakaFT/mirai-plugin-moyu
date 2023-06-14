@@ -29,7 +29,13 @@ class Utils {
                 return friends.filter { it.nick.contains(idOrNameOrRemark) || it.remark.contains(idOrNameOrRemark) }
             }
         }
+
+        @Suppress("unused")
+        fun getBotInstance(): Bot? {
+            if (Bot.instances.isEmpty()){
+                return null
+            }
+            return Bot.instances[0]
+        }
     }
-
-
 }

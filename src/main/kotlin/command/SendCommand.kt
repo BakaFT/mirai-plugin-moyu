@@ -1,6 +1,7 @@
 package command;
 
 import me.bakaft.plugin.PluginMain
+import me.bakaft.plugin.util.Utils.Companion.getBotInstance
 import me.bakaft.plugin.util.Utils.Companion.getFriendByIdOrNickOrRemarkFuzzy
 import me.bakaft.plugin.util.Utils.Companion.getGroupsByIdOrNameFuzzy
 import net.mamoe.mirai.Bot
@@ -22,7 +23,11 @@ object SendGroupCommand: RawCommand(
 
     @OptIn(ConsoleExperimentalApi::class)
     override suspend fun CommandContext.onCommand(args: MessageChain) {
-        val botInstance = Bot.instances[0]
+        val botInstance = getBotInstance()
+        if (botInstance == null) {
+            println("No Bot instance found")
+            return
+        }
 
         if (args.size <= 1) {
             println(usage)
@@ -68,11 +73,15 @@ object SendFriendCommand: RawCommand(
     description = "向指定的好友发送消息，支持模糊匹配QQ号或昵称|备注(不可含空格，未处理此异常，可能会导致发送到错误的好友)，消息中可包含空格。",
     prefixOptional = true,
 ){
-    var lastSentFriendId:Long? = null
+    private var lastSentFriendId:Long? = null
 
     @OptIn(ConsoleExperimentalApi::class)
     override suspend fun CommandContext.onCommand(args: MessageChain) {
-        val botInstance = Bot.instances[0]
+        val botInstance = getBotInstance()
+        if (botInstance == null) {
+            println("No Bot instance found")
+            return
+        }
 
         if (args.size <= 1) {
             println(usage)
