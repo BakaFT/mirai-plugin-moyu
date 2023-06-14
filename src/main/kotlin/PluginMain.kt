@@ -2,7 +2,8 @@ package me.bakaft.plugin;
 
 
 import command.SearchCommand
-import command.SendCommand
+import command.SendFriendCommand
+import command.SendGroupCommand
 import net.mamoe.mirai.console.command.*
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
@@ -26,7 +27,8 @@ object PluginMain : KotlinPlugin(
 ) {
     override fun onEnable() {
         // Commands
-        CommandManager.registerCommand(SendCommand)
+        CommandManager.registerCommand(SendGroupCommand)
+        CommandManager.registerCommand(SendFriendCommand)
         CommandManager.registerCommand(SearchCommand)
 
         // EventHandlers
