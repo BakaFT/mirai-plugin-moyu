@@ -4,6 +4,7 @@ import me.bakaft.plugin.PluginMain
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.CommandContext
 import net.mamoe.mirai.console.command.RawCommand
+import net.mamoe.mirai.contact.remarkOrNick
 import net.mamoe.mirai.message.data.MessageChain
 
 object SearchCommand: RawCommand(
@@ -19,21 +20,21 @@ object SearchCommand: RawCommand(
             return
         }
         val neddle = args[0].toString()
+        
         val botInstance = Bot.instances[0]
-
         val friends = botInstance.friends
         val groups = botInstance.groups
 
-        val searchResGroup = groups.find { it.name.contains(neddle) }
-        val searchResFriend = friends.find { it.nick.contains(neddle) }
+        val searchResGroup = groups.filter { it.name.contains(neddle)   }
+        val searchResFriend = friends.filter { it.nick.contains(neddle) or it.remark.contains(neddle) }
 
-        if (searchResGroup != null){
-            println("[Name]:"+searchResGroup.name+",[ID]:"+searchResGroup.id)
+        searchResGroup.forEach {
+            println("[Group][Name]:"+it.name+",[ID]:"+it.id)
         }
-        if (searchResFriend != null){
-            println("[Name]:"+searchResFriend.nick+",[ID]:"+searchResFriend.id)
+        searchResFriend.forEach {
+            println("[Friend][Name]:"+it.remarkOrNick+",[ID]:"+it.id)
         }
-        if(searchResFriend == null && searchResGroup == null){
+        if(searchResFriend.isEmpty() && searchResGroup.isEmpty()){
             println("Contact Not Found")
         }
     }
