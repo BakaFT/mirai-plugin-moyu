@@ -6,7 +6,7 @@ import net.mamoe.mirai.console.command.CommandContext
 import net.mamoe.mirai.console.command.RawCommand
 import net.mamoe.mirai.message.data.MessageChain
 
-object ObjCommand: RawCommand(
+object SearchCommand: RawCommand(
     PluginMain,
     "search",
     usage = "search <neddle>",

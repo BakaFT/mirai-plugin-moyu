@@ -1,6 +1,7 @@
 package me.bakaft.plugin;
 
-import command.ObjCommand
+
+import command.SearchCommand
 import command.SendCommand
 import net.mamoe.mirai.console.command.*
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
@@ -24,9 +25,14 @@ object PluginMain : KotlinPlugin(
     }
 ) {
     override fun onEnable() {
+        // Commands
         CommandManager.registerCommand(SendCommand)
-        CommandManager.registerCommand(ObjCommand)
+        CommandManager.registerCommand(SearchCommand)
+
+        // EventHandlers
+
         logger.info { "Moyu Plugin loaded" }
+
     }
 
 
