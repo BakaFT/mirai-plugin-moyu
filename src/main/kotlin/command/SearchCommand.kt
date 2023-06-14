@@ -1,6 +1,7 @@
 package command;
 
 import me.bakaft.plugin.PluginMain
+import me.bakaft.plugin.util.Utils.Companion.getBotInstance
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.CommandContext
 import net.mamoe.mirai.console.command.RawCommand
@@ -21,7 +22,12 @@ object SearchCommand: RawCommand(
         }
         val neddle = args[0].toString()
         
-        val botInstance = Bot.instances[0]
+        val botInstance = getBotInstance()
+        if (botInstance == null) {
+            println("No Bot instance found")
+            return
+        }
+        
         val friends = botInstance.friends
         val groups = botInstance.groups
 
