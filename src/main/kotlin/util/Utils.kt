@@ -8,6 +8,15 @@ class Utils {
 
     companion object{
         @Suppress("unused")
+        fun getGroupMemberIdByIdFuzzy(id:String,group: Group):Long?{
+            val member = group.members.find { it.id.toString().startsWith(id) }
+            if (member != null) {
+                 return member.id
+            }
+            return null
+        }
+
+        @Suppress("unused")
         fun getGroupsByIdOrNameFuzzy(idOrName:String,groups: ContactList<Group>):List<Group>{
             try {
                 // If idOrName is a number, it's a group id

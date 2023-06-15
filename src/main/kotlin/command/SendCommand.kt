@@ -3,14 +3,13 @@ package command;
 import me.bakaft.plugin.PluginMain
 import me.bakaft.plugin.util.Utils.Companion.getBotInstance
 import me.bakaft.plugin.util.Utils.Companion.getFriendByIdOrNickOrRemarkFuzzy
-import me.bakaft.plugin.util.Utils.Companion.getGroupsByIdOrNameFuzzy
-import net.mamoe.mirai.Bot
+import me.bakaft.plugin.util.Utils.Companion.getGroupMemberIdByIdFuzzy
+import me.bakaft.plugin.util.Utils.Companion.getGroupsByIdOrNameFuzzy import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.CommandContext
 import net.mamoe.mirai.console.command.RawCommand
 import net.mamoe.mirai.console.util.ConsoleExperimentalApi
 import net.mamoe.mirai.console.util.ContactUtils.getFriendOrGroup
-import net.mamoe.mirai.message.data.MessageChain
-import net.mamoe.mirai.message.data.content
+import net.mamoe.mirai.message.data.*
 
 object SendGroupCommand: RawCommand(
     PluginMain,
@@ -35,9 +34,37 @@ object SendGroupCommand: RawCommand(
         }
 
         val groupIdOrDash = args[0].content
+        val fuzzySearchResult = getGroupsByIdOrNameFuzzy(idOrName = groupIdOrDash, groups = botInstance.groups)
+
         // Message can be split by space, so we need to join them from args[1] to args[args.size-1]
         // Such as args[1] = "I",args[2]="AM",args[3]="JOHN", we need to join them to "I AM JOHN"
-        val message = args.slice(1 until args.size).joinToString(" ")
+        // val message = args.slice(1 until args.size).joinToString(" ")
+        val chainBuilder = MessageChainBuilder()
+        for (i in 1 until args.size) {
+            val messagePiece = args[i]
+            if (messagePiece.content.startsWith("@")) {
+                // If messagePiece is "@all", replace it with "@全体成员"
+                if (messagePiece.content == "@all") {
+                    chainBuilder.append(AtAll)
+                }
+                // If messagePiece is "@xxx", replace it with "@xxx "
+                else {
+                    chainBuilder.append(
+                        At(
+                            getGroupMemberIdByIdFuzzy(messagePiece.content.substring(1),
+                                // Don't need check here, will check before the chain is sent
+                                fuzzySearchResult[0]
+                            )!!
+                            )
+                        )
+                }
+            }else{
+                chainBuilder.append(messagePiece)
+            }
+        }
+        val chain = chainBuilder.build()
+
+
 
         // If groupIdOrDash is "-", send message to last sent group
         if (groupIdOrDash == "-") {
@@ -45,17 +72,16 @@ object SendGroupCommand: RawCommand(
                 println("Have not sent any message yet, lastSentGroupId not set")
                 return
             }
-            botInstance.getFriendOrGroup(lastSentGroupId!!).sendMessage(message)
+            botInstance.getFriendOrGroup(lastSentGroupId!!).sendMessage(chain)
             return
         }
         // Otherwise, Search the Group and send message to it
-        val fuzzySearchResult = getGroupsByIdOrNameFuzzy(idOrName = groupIdOrDash, groups = botInstance.groups)
         when (fuzzySearchResult.size) {
             0 -> {
                 println("No group found")
             }
             1 -> {
-                botInstance.getGroup(fuzzySearchResult[0].id)?.sendMessage(message)
+                botInstance.getGroup(fuzzySearchResult[0].id)?.sendMessage(chain)
                 lastSentGroupId = fuzzySearchResult[0].id
             }
             else -> {
