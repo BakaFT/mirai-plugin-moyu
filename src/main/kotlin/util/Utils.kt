@@ -50,7 +50,7 @@ class Utils {
                 when(it){
                     is QuoteReply -> {
                         val remarkOrNameCardOrNick = getGroupsByIdOrNameFuzzy(it.source.targetId.toString(),botInstance.groups)[0].getMember(it.source.fromId)?.remarkOrNameCardOrNick
-                        val quoteMessagePlainText = convertMessageChainToPlainTextFriend(it.source.originalMessage)
+                        val quoteMessagePlainText = convertMessageChainToPlainTextGroup(it.source.originalMessage)
                         res.append("[Quote]${remarkOrNameCardOrNick} said ${quoteMessagePlainText}[Quote]")
                     }
                     is Image -> {
