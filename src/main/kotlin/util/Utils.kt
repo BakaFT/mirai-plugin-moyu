@@ -8,12 +8,9 @@ class Utils {
 
     companion object{
         @Suppress("unused")
-        fun getGroupMemberIdByIdFuzzy(id:String,group: Group):Long?{
-            val member = group.members.find { it.id.toString().startsWith(id) }
-            if (member != null) {
-                 return member.id
-            }
-            return null
+        fun getGroupMembersByIdFuzzy(id:String,group: Group): List<Member> {
+            return group.members.filter { it.id.toString().startsWith(id) }
+
         }
 
         @Suppress("unused")

@@ -3,12 +3,13 @@ package command;
 import me.bakaft.plugin.PluginMain
 import me.bakaft.plugin.util.Utils.Companion.getBotInstance
 import me.bakaft.plugin.util.Utils.Companion.getFriendByIdOrNickOrRemarkFuzzy
-import me.bakaft.plugin.util.Utils.Companion.getGroupMemberIdByIdFuzzy
+import me.bakaft.plugin.util.Utils.Companion.getGroupMembersByIdFuzzy
 import me.bakaft.plugin.util.Utils.Companion.getGroupsByIdOrNameFuzzy import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.CommandContext
 import net.mamoe.mirai.console.command.RawCommand
 import net.mamoe.mirai.console.util.ConsoleExperimentalApi
 import net.mamoe.mirai.console.util.ContactUtils.getFriendOrGroup
+import net.mamoe.mirai.contact.remarkOrNameCardOrNick
 import net.mamoe.mirai.message.data.*
 
 object SendGroupCommand: RawCommand(
@@ -42,24 +43,31 @@ object SendGroupCommand: RawCommand(
         val chainBuilder = MessageChainBuilder()
         for (i in 1 until args.size) {
             val messagePiece = args[i]
-            if (messagePiece.content.startsWith("@")) {
-                // If messagePiece is "@all", replace it with "@全体成员"
-                if (messagePiece.content == "@all") {
-                    chainBuilder.append(AtAll)
+            when{
+                messagePiece.content.startsWith("@") -> {
+                    if (messagePiece.content == "@all") {
+                        chainBuilder.append(AtAll)
+                    }else{
+                        val groupMemebers = getGroupMembersByIdFuzzy(messagePiece.content.substring(1),fuzzySearchResult[0])
+                        when(groupMemebers.size){
+                            0 ->{
+                                println("Member you wanna at is not found")
+                            }
+                            1 -> {
+                                chainBuilder.append(
+                                    At(groupMemebers[0])
+                                )
+                            }
+                            else -> {
+                                println("Input is ambiguous, Found ${fuzzySearchResult.size} group members:")
+                                groupMemebers.forEach { println("[Group][Name]:" + it.remarkOrNameCardOrNick + ",[ID]:" + it.id) }
+                            }
+                        }
+                    }
                 }
-                // If messagePiece is "@xxx", replace it with "@xxx "
-                else {
-                    chainBuilder.append(
-                        At(
-                            getGroupMemberIdByIdFuzzy(messagePiece.content.substring(1),
-                                // Don't need check here, will check before the chain is sent
-                                fuzzySearchResult[0]
-                            )!!
-                            )
-                        )
+                else -> {
+                    chainBuilder.append(messagePiece)
                 }
-            }else{
-                chainBuilder.append(messagePiece)
             }
         }
         val chain = chainBuilder.build()
