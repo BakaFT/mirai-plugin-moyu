@@ -106,9 +106,11 @@ class Utils {
                         res.append(it.content)
                     }
                     is At -> {
-                        res.append("@${it.getDisplay(
-                            getGroupsByIdOrNameFuzzy(chain[MessageSource]?.targetId.toString(), botInstance.groups)[0]
-                        )}")
+                        res.append(
+                            it.getDisplay(
+                                getGroupsByIdOrNameFuzzy(chain[MessageSource]?.targetId.toString(), botInstance.groups)[0]
+                            )
+                        )
                     }
                     is AtAll -> {
                         res.append(it.content)
