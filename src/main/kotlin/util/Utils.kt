@@ -2,6 +2,7 @@ package me.bakaft.plugin.util
 
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.contact.*
+import net.mamoe.mirai.message.action.Nudge
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import net.mamoe.mirai.utils.MiraiInternalApi
@@ -50,10 +51,9 @@ class Utils {
             chain.forEach {
                 when(it){
                     is QuoteReply -> {
-                        // Kinda buggy
-//                        val friendRemarkOrNick = getFriendByIdOrNickOrRemarkFuzzy(it.source.fromId.toString(),botInstance.friends)?.get(0)?.remarkOrNick
-//                        val quoteMessagePlainText = convertMessageChainToPlainTextFriend(it.source.originalMessage)
-//                        res.append("[Quote]${friendRemarkOrNick} said ${quoteMessagePlainText}[Quote]")
+                        val friendRemarkOrNick = getFriendByIdOrNickOrRemarkFuzzy(it.source.fromId.toString(),botInstance.friends)?.get(0)?.remarkOrNick
+                        val quoteMessagePlainText = convertMessageChainToPlainTextFriend(it.source.originalMessage)
+                        res.append("[Quote]${friendRemarkOrNick} said ${quoteMessagePlainText}[Quote]")
                     }
                     is Image -> {
                         val url = it.queryUrl()
@@ -61,16 +61,41 @@ class Utils {
                         val link = "\u001B]8;;$url\u001B\\$linkText\u001B]8;;\u001B\\"
                         res.append(link)
                     }
-                    is At -> {
-                        res.append("@${it.getDisplay(
-                            getGroupsByIdOrNameFuzzy(chain[MessageSource]?.targetId.toString(), botInstance.groups)[0]
-                        )}")
+                    is FlashImage -> {
+                        val url = it.image.queryUrl()
+                        val linkText = "[点击查看闪照]"
+                        val link = "\u001B]8;;$url\u001B\\$linkText\u001B]8;;\u001B\\"
+                        res.append(link)
                     }
-                    is AtAll -> {
+                    is Audio -> {
+                        val onlineAudio = it as OnlineAudio
+                        // The audio file is SILKV3 encoded, can't be played directly
+                        val url = onlineAudio.urlForDownload
+                        // Buggy, audio length is always 0, maybe a bug of mirai
+                        val linkText = "[点击下载语音 ${onlineAudio.length}s]"
+                        val link = "\u001B]8;;$url\u001B\\$linkText\u001B]8;;\u001B\\"
+                        res.append(link)
+                    }
+                    is PokeMessage ->{
+                        // [戳一戳]
+                        res.append(it.content)
+                    }
+                    is Nudge ->{
+                        // 根据文档，看样子是不会遇到了
+                        res.append("[Nudge]")
+                    }
+                    is Face -> {
+                        // [表情对应的中文名]
                         res.append(it.content)
                     }
                     is PlainText -> {
                         res.append(it.content)
+                    }
+                    is At -> {
+                        // 好友聊天无效
+                    }
+                    is AtAll -> {
+                        // 好友聊天无效
                     }
                     else -> {
                         // do nothing
