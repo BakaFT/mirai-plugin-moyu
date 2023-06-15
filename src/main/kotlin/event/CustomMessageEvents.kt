@@ -1,5 +1,6 @@
 package me.bakaft.plugin.event
 
+import me.bakaft.plugin.util.Utils.Companion.convertMessageChainToPlainTextFriend
 import net.mamoe.mirai.contact.AnonymousMember
 import net.mamoe.mirai.contact.remarkOrNick
 import net.mamoe.mirai.event.EventChannel
@@ -22,7 +23,7 @@ object CustomMessageEvents {
             println("[群][${group.name}(${group.id})] $senderName($displayId) -> ${message.content}")
         }
         eventChannel.subscribeAlways<FriendMessageEvent> {
-            println("[好友][${sender.remarkOrNick}(${sender.id})] -> ${message.content}")
+            println("[好友][${sender.remarkOrNick}(${sender.id})] -> ${convertMessageChainToPlainTextFriend(message)}")
         }
 
         // 同步机器人在其他客户端的发送
