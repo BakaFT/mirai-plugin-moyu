@@ -1,6 +1,7 @@
 package me.bakaft.plugin.event
 
 import me.bakaft.plugin.util.Utils.Companion.convertMessageChainToPlainTextFriend
+import me.bakaft.plugin.util.Utils.Companion.convertMessageChainToPlainTextGroup
 import net.mamoe.mirai.contact.AnonymousMember
 import net.mamoe.mirai.contact.remarkOrNick
 import net.mamoe.mirai.event.EventChannel
@@ -20,7 +21,7 @@ object CustomMessageEvents {
         // Console 被动接受
         eventChannel.subscribeAlways<GroupMessageEvent> {
             val displayId = if (sender is AnonymousMember) "匿名" else sender.id.toString()
-            println("[群][${group.name}(${group.id})] $senderName($displayId) -> ${message.content}")
+            println("[群][${group.name}(${group.id})] $senderName($displayId) -> ${convertMessageChainToPlainTextGroup(message)}")
         }
         eventChannel.subscribeAlways<FriendMessageEvent> {
             println("[好友][${sender.remarkOrNick}(${sender.id})] -> ${convertMessageChainToPlainTextFriend(message)}")
