@@ -38,11 +38,11 @@ object PluginMain : KotlinPlugin(
         CommandManager.registerCommand(SendFriendCommand)
         CommandManager.registerCommand(SearchCommand)
 
-        // EventHandlers
+        // Events
         val eventChannel = GlobalEventChannel.parentScope(this)
         CustomMessageEvents.apply(eventChannel)
         
-        logger.info { "Moyu Plugin loaded" }
+        logger.info { "Moyu Plugin Enabled" }
 
     }
 

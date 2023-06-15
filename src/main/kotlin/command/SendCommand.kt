@@ -4,7 +4,6 @@ import me.bakaft.plugin.PluginMain
 import me.bakaft.plugin.util.Utils.Companion.getBotInstance
 import me.bakaft.plugin.util.Utils.Companion.getFriendByIdOrNickOrRemarkFuzzy
 import me.bakaft.plugin.util.Utils.Companion.getGroupsByIdOrNameFuzzy
-import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.CommandContext
 import net.mamoe.mirai.console.command.RawCommand
 import net.mamoe.mirai.console.util.ConsoleExperimentalApi

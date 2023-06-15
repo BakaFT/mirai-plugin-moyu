@@ -1,7 +1,8 @@
 package me.bakaft.plugin.event
 
-import me.bakaft.plugin.util.Utils.Companion.convertMessageChainToPlainTextFriend
-import me.bakaft.plugin.util.Utils.Companion.convertMessageChainToPlainTextGroup
+
+import me.bakaft.plugin.event.util.CustomMessageUtil.Companion.convertMessageChainToPlainTextFriend
+import me.bakaft.plugin.event.util.CustomMessageUtil.Companion.convertMessageChainToPlainTextGroup
 import net.mamoe.mirai.contact.AnonymousMember
 import net.mamoe.mirai.contact.remarkOrNick
 import net.mamoe.mirai.event.EventChannel
