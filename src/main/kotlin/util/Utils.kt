@@ -49,9 +49,9 @@ class Utils {
             chain.forEach{
                 when(it){
                     is QuoteReply -> {
-                        val friendRemarkOrNick = getFriendByIdOrNickOrRemarkFuzzy(it.source.fromId.toString(),botInstance.friends)?.get(0)?.remarkOrNick
+                        val remarkOrNameCardOrNick = getGroupsByIdOrNameFuzzy(it.source.targetId.toString(),botInstance.groups)[0].getMember(it.source.fromId)?.remarkOrNameCardOrNick
                         val quoteMessagePlainText = convertMessageChainToPlainTextFriend(it.source.originalMessage)
-                        res.append("[Quote]${friendRemarkOrNick} said ${quoteMessagePlainText}[Quote]")
+                        res.append("[Quote]${remarkOrNameCardOrNick} said ${quoteMessagePlainText}[Quote]")
                     }
                     is Image -> {
                         val url = it.queryUrl()
