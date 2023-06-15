@@ -11,7 +11,7 @@ import net.mamoe.mirai.message.data.Image.Key.queryUrl
 class CustomMessageUtil {
     companion object{
         @Suppress("unused")
-        suspend fun convertMessageChainToPlainTextGroup(chain: MessageChain):String{
+        suspend fun convertMessageChainToPlainTextGroup(chain: MessageChain,topChain:MessageChain=chain):String{
             val botInstance = Utils.getBotInstance()!!
             val res = StringBuilder()
             chain.forEach{
@@ -21,7 +21,7 @@ class CustomMessageUtil {
                             it.source.targetId.toString(),
                             botInstance.groups
                         )[0].getMember(it.source.fromId)?.remarkOrNameCardOrNick
-                        val quoteMessagePlainText = convertMessageChainToPlainTextGroup(it.source.originalMessage)
+                        val quoteMessagePlainText = convertMessageChainToPlainTextGroup(it.source.originalMessage,topChain)
                         res.append("[Quote]${remarkOrNameCardOrNick} said ${quoteMessagePlainText}[Quote]")
                     }
                     is Image -> {
@@ -83,7 +83,7 @@ class CustomMessageUtil {
                         res.append(
                             it.getDisplay(
                                 Utils.getGroupsByIdOrNameFuzzy(
-                                    chain[MessageSource]?.targetId.toString(),
+                                    topChain[MessageSource]?.targetId.toString(),
                                     botInstance.groups
                                 )[0]
                             )
